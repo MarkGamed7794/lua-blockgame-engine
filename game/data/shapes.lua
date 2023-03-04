@@ -4,7 +4,7 @@ Shape = require "game.components.shape"
 Arrangement = require "game.components.arrangement"
 Colours = require "game.data.colours"
 
-Shapes = {
+local Shapes = {
     T = Shape(
         {
             Arrangement({vec2( 0,-1), vec2(-1, 0), vec2( 0, 0), vec2( 1, 0)}),

@@ -16,13 +16,22 @@ Renderer = require "game.components.renderer"
 Shapes = require "game.data.shapes"
 InputHandler = require "game.components.input_handler"
 Randomizer = require "game.components.randomizer"
+KickGenerator = require "game.components.kick_generator"
+KickSet = require "game.components.kick_set"
 vec2 = require "game.components.vec2"
 
 local t = 0
 
-engine = Engine(Board(10, 20, 10, Colour(0.2,0.2,0.2)), {
-    Piece(nil, vec2(5, 10), vec2(2, 10), {spawn_delay = 0.2, gravity = 8, lock_delay = 1}),
-}, Randomizer(table.map({"Z", "L", "O", "S", "I", "J", "T"}, function(name) return Shapes[name] end)))
+engine = Engine(
+    Board(10, 20, 10, Colour(0.2,0.2,0.2)),
+    {
+        Piece(nil, vec2(5, 10), vec2(2, 10), {spawn_delay = 0.2, gravity = 8, lock_delay = 1}),
+    },
+    Randomizer(table.map({"Z", "L", "O", "S", "I", "J", "T"}, function(name) return Shapes[name] end)),
+    KickGenerator(function(self, piece)
+        return KickSet({vec2(-1, 0), vec2(1, 0), vec2(0, -1)})
+    end)
+)
 
 engine:updateObjectList()
 
@@ -50,10 +59,10 @@ local piece_pressed_functions = {
         end
     end,
     ccw=function(piece, engine)
-        piece:attemptRotate(engine.objects, -1)
+        piece:attemptRotateWithKicks(engine.objects, -1, engine.kick_generator)
     end,
     cw=function(piece, engine)
-        piece:attemptRotate(engine.objects, 1)
+        piece:attemptRotateWithKicks(engine.objects, 1, engine.kick_generator)
     end,
     hold=function(piece, engine)
         piece:hold(engine)

@@ -7,12 +7,13 @@ local Engine = {
     }
 }
 
-function Engine:new(board, pieces, randomizer)
+function Engine:new(board, pieces, randomizer, kick_generator)
     local new_engine = {
         board = board,
         pieces = pieces,
         objects = {board, unpack(pieces)},
         randomizer = randomizer,
+        kick_generator = kick_generator,
 
         lines = 0,
         score = 0,

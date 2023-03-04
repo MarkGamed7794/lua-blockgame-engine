@@ -2,6 +2,8 @@
 
 Vec2 = {
     mt = {
+        __type = "vec2",
+
         __add = function(a, b)
             return Vec2:new(a.x + b.x, a.y + b.y)
         end,
@@ -50,7 +52,9 @@ Vec2 = {
 }
 
 function Vec2:new(x, y)
-    local vec = {x=x or 0, y=y or 0}
+    local new_x, new_y = x, y
+    if(type(x) == "vec2") then new_x, new_y = x.x, x.y end
+    local vec = {x=new_x or 0, y=new_y or 0}
     setmetatable(vec, Vec2.mt)
     return vec
 end

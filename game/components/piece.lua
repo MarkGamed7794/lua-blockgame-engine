@@ -41,6 +41,7 @@ function Piece:new(shape, spawn_position, position, extras)
 
         attemptMove = self.attemptMove,
         attemptRotate = self.attemptRotate,
+        attemptRotateWithKicks = self.attemptRotateWithKicks,
 
         place = self.place,
         isGrounded = self.isGrounded,
@@ -238,7 +239,7 @@ function Piece:attemptMove(collision_list, offset)
     return true
 end
 
--- SImilar to collidesWithRotation, but for a list of objects.
+-- Similar to collidesWithRotation, but for a list of objects.
 function Piece:attemptRotate(collision_list, rotations)
     if(not self.shape) then return false end
     for _, obj in ipairs(collision_list) do
@@ -248,6 +249,21 @@ function Piece:attemptRotate(collision_list, rotations)
     end
     self:rotate(rotations)
     return true
+end
+
+-- Similar to attemptRotate, but tries kicks if the rotation fails initially.
+function Piece:attemptRotateWithKicks(collision_list, rotations, kick_generator)
+    if(not self.shape) then return false end
+    if(self:attemptRotate(collision_list, rotations)) then return true end
+    if(not kick_generator) then return false end
+    local original_position = vec2(self.position)
+    local kick_list = kick_generator:getKickSet(self)
+    while (kick_list:getNextKick()) do
+        self.position = original_position + kick_list:getCurrentKick()
+        if(self:attemptRotate(collision_list, rotations)) then return true end
+    end
+    self.position = original_position
+    return false
 end
 
 
