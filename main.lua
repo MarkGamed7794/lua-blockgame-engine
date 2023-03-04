@@ -4,7 +4,7 @@ require "funcs"
 
 fonts, shaders = unpack(require "assets")
 formatters = require "formatters"
-Engine = require "game.engine"
+Engine = require "game.components.engine"
 colours = require "game.data.colours"
 Board = require "game.components.board"
 Arrangement = require "game.components.arrangement"
